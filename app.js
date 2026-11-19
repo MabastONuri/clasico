@@ -132,11 +132,17 @@ function startApp() {
 
 function render() {
   const t = totals();
-  $('mWins').textContent = t.mw;
-  $('zWins').textContent = t.zw;
-  $('goals').textContent = `${t.mg} – ${t.zg}`;
-  $('sessCount').textContent = t.n;
-  $('sessWon').textContent = `${t.ms} – ${t.zs}`;
+  // --len drives the CSS font size so longer numbers shrink to fit
+  const put = (id, v, min) => {
+    $(id).textContent = v;
+    $(id).style.setProperty('--len', Math.max(min, String(v).length));
+  };
+  const big = Math.max(2, String(t.mw).length, String(t.zw).length); // both sides share one size
+  put('mWins', t.mw, big);
+  put('zWins', t.zw, big);
+  put('goals', `${t.mg} – ${t.zg}`, 6);
+  put('sessCount', t.n, 6);
+  put('sessWon', `${t.ms} – ${t.zs}`, 6);
   $('shareBar').style.width = (t.mw + t.zw ? (t.mw / (t.mw + t.zw)) * 100 : 50) + '%';
   $('lead').innerHTML = leadText(t).replace(/^(Mabast|Zmnako)/, '<b>$1</b>');
   $('empty').hidden = t.n > 0;
@@ -146,8 +152,7 @@ function render() {
     const who = w === 'm' ? 'Mabast won' : w === 'z' ? 'Zmnako won' : 'Drawn session';
     return `<li class="row ${w}">
       <span class="when"><b>${ymd(d)}</b><small>${timeFmt.format(d)}</small></span>
-      <span class="score">${s.mw}<i>–</i>${s.zw}<small>${who}</small></span>
-      <span class="goals"><small>Goals</small>${s.mg}–${s.zg}</span>
+      <span class="score"><b style="--len:${Math.max(5, `${s.mw}${s.zw}`.length + 4)}">${s.mw}<i>–</i>${s.zw}</b><small>${who} · Goals ${s.mg}–${s.zg}</small></span>
       <button class="del" type="button" data-id="${s.id}" aria-label="Delete ${ymd(d)} session, ${s.mw} to ${s.zw}">
         <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M10 11v6m4-6v6M6 7l1 12a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1l1-12M9 7V5a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>
       </button>

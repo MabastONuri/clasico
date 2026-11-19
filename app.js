@@ -10,8 +10,6 @@ const standalone = matchMedia('(display-mode: standalone)').matches || navigator
 const isIOS = /iphone|ipad|ipod/i.test(navigator.userAgent) ||
   (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
 
-if (standalone) startApp(); else showGate();
-
 /* ---------- install gate ---------- */
 function showGate() {
   $('gate').hidden = false;
@@ -261,3 +259,6 @@ async function exportPng() {
   a.click();
   setTimeout(() => URL.revokeObjectURL(a.href), 2000);
 }
+
+// Must stay last: startApp() uses the let/const declarations above.
+if (standalone) startApp(); else showGate();

@@ -1,0 +1,117 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#0b0d12">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Clásico">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<link rel="icon" href="icons/icon-192.png">
+<link rel="stylesheet" href="style.css">
+<title>Clásico Ledger</title>
+</head>
+<body>
+
+<!-- Shown whenever the page runs in a browser tab instead of as the installed app -->
+<section id="gate" class="gate" hidden>
+  <div class="flag" aria-hidden="true"><i></i><i></i></div>
+  <h1 class="gate-title">Clásico<span>Ledger</span></h1>
+  <p class="gate-lede">Mabast and Zmnako's head‑to‑head. It only runs from your home screen — install it to continue.</p>
+
+  <ol id="gateIOS" class="steps" hidden>
+    <li><span class="n">1</span><span>Tap
+      <svg class="ios-share" viewBox="0 0 24 24" aria-label="Share"><path d="M12 3v12M7.5 7.5 12 3l4.5 4.5M5 11v9h14v-9" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      in Safari's toolbar</span></li>
+    <li><span class="n">2</span><span>Choose <b>Add to Home Screen</b></span></li>
+    <li><span class="n">3</span><span>Open <b>Clásico</b> from your home screen</span></li>
+  </ol>
+
+  <div id="gateOther" hidden>
+    <button id="installBtn" class="primary" hidden>Install app</button>
+    <p id="otherHint" class="hint">Open the browser menu <b>⋮</b> and tap <b>Install app</b> or <b>Add to Home screen</b>, then open Clásico from your home screen.</p>
+  </div>
+</section>
+
+<main id="app" class="app" hidden>
+  <header class="top">
+    <div>
+      <p class="eyebrow">Clásico Ledger</p>
+      <p class="vs">Mabast <span>×</span> Zmnako</p>
+    </div>
+    <button id="exportBtn" class="ghost" type="button">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 4v11m-4.5-4.5L12 15l4.5-4.5M5 19h14" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      Export
+    </button>
+  </header>
+
+  <section class="board" aria-label="Games won">
+    <div class="side barca">
+      <p class="club">FC Barcelona</p>
+      <h2 class="name">Mabast</h2>
+      <p class="wins" id="mWins">0</p>
+    </div>
+    <div class="side madrid">
+      <p class="club">Real Madrid</p>
+      <h2 class="name">Zmnako</h2>
+      <p class="wins" id="zWins">0</p>
+    </div>
+    <span class="seam">Games won</span>
+  </section>
+  <div class="share" aria-hidden="true"><i id="shareBar"></i></div>
+
+  <section class="facts">
+    <div><span>Goals</span><b id="goals">0 – 0</b></div>
+    <div><span>Sessions</span><b id="sessCount">0</b></div>
+    <div><span>Sessions won</span><b id="sessWon">0 – 0</b></div>
+  </section>
+  <p class="lead" id="lead"></p>
+
+  <h3 class="h">Sessions</h3>
+  <ol id="list" class="list"></ol>
+  <p id="empty" class="empty">No sessions yet.<br>Play, then log the result here.</p>
+
+  <div class="dock"><button id="addBtn" class="primary" type="button">End session</button></div>
+</main>
+
+<dialog id="entry" class="sheet">
+  <form id="entryForm" novalidate>
+    <header class="sheet-h">
+      <h2>Session result</h2>
+      <p id="entryDate"></p>
+    </header>
+
+    <fieldset>
+      <legend>Games won</legend>
+      <div class="pair">
+        <div class="field m"><label for="mw">Mabast</label>
+          <div class="step"><button type="button" data-for="mw" data-d="-1" aria-label="Fewer Mabast games">−</button><input id="mw" inputmode="numeric" pattern="[0-9]*" autocomplete="off"><button type="button" data-for="mw" data-d="1" aria-label="More Mabast games">+</button></div></div>
+        <div class="field z"><label for="zw">Zmnako</label>
+          <div class="step"><button type="button" data-for="zw" data-d="-1" aria-label="Fewer Zmnako games">−</button><input id="zw" inputmode="numeric" pattern="[0-9]*" autocomplete="off"><button type="button" data-for="zw" data-d="1" aria-label="More Zmnako games">+</button></div></div>
+      </div>
+    </fieldset>
+
+    <fieldset>
+      <legend>Goals</legend>
+      <div class="pair">
+        <div class="field m"><label for="mg">Mabast</label>
+          <div class="step"><button type="button" data-for="mg" data-d="-1" aria-label="Fewer Mabast goals">−</button><input id="mg" inputmode="numeric" pattern="[0-9]*" autocomplete="off"><button type="button" data-for="mg" data-d="1" aria-label="More Mabast goals">+</button></div></div>
+        <div class="field z"><label for="zg">Zmnako</label>
+          <div class="step"><button type="button" data-for="zg" data-d="-1" aria-label="Fewer Zmnako goals">−</button><input id="zg" inputmode="numeric" pattern="[0-9]*" autocomplete="off"><button type="button" data-for="zg" data-d="1" aria-label="More Zmnako goals">+</button></div></div>
+      </div>
+    </fieldset>
+
+    <p id="err" class="err" role="alert"></p>
+    <div class="actions">
+      <button type="button" id="cancelBtn" class="ghost">Cancel</button>
+      <button type="submit" class="primary">Save session</button>
+    </div>
+  </form>
+</dialog>
+
+<script src="app.js"></script>
+</body>
+</html>

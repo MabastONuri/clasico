@@ -3,6 +3,19 @@
 const KEY = 'clasico.sessions.v1';
 const $ = (id) => document.getElementById(id);
 const FIELDS = ['mw', 'zw', 'mg', 'zg']; // Mabast wins, Zmnako wins, Mabast goals, Zmnako goals
+const MAX = 9999;
+
+// Bump VERSION and add an entry on top with every release.
+const VERSION = '1.5.0';
+const CHANGELOG = [
+  ['1.5.0', '2026-11-19', ['Games and goals accept any number from 0 to 9999', 'Version and change log on the install screen']],
+  ['1.4.0', '2026-11-19', ['Big numbers shrink to fit, so 3 and 4 digit totals stay inside their box']],
+  ['1.3.0', '2026-11-19', ['Delete a session with its own button and a confirm step']],
+  ['1.2.0', '2026-11-19', ['Fixed the blank screen when opening from the home screen', 'Updates reach the app the next time it opens online']],
+  ['1.1.0', '2026-11-19', ['Dates shown as yyyy-mm-dd', 'Player photos behind each side of the scoreboard']],
+  ['1.0.0', '2026-11-19', ['First release: log sessions, totals, PNG export, works offline']],
+];
+const esc = (s) => s.replace(/[&<>"]/g, (c) => `&#${c.charCodeAt(0)};`);
 
 if ('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js');
 
@@ -13,6 +26,11 @@ const isIOS = /iphone|ipad|ipod/i.test(navigator.userAgent) ||
 /* ---------- install gate ---------- */
 function showGate() {
   $('gate').hidden = false;
+  $('ver').textContent = `v${VERSION}`;
+  $('changelog').innerHTML = CHANGELOG.map(([v, date, notes]) => `<li>
+    <p class="log-v"><b>${v}</b><time>${date}</time></p>
+    <ul>${notes.map((n) => `<li>${esc(n)}</li>`).join('')}</ul>
+  </li>`).join('');
   if (isIOS) { $('gateIOS').hidden = false; return; }
   $('gateOther').hidden = false;
   let prompt;
@@ -67,6 +85,7 @@ function startApp() {
   sessions = load();
   navigator.storage?.persist?.();
   $('app').hidden = false;
+  $('appVer').textContent = `Clásico Ledger v${VERSION}`;
   render();
 
   const dlg = $('entry'), form = $('entryForm');
@@ -82,7 +101,7 @@ function startApp() {
     if (!b) return;
     const inp = $(b.dataset.for);
     const v = (parseInt(inp.value, 10) || 0) + Number(b.dataset.d);
-    inp.value = String(Math.min(999, Math.max(0, v)));
+    inp.value = String(Math.min(MAX, Math.max(0, v)));
   });
   FIELDS.forEach((f) => $(f).addEventListener('focus', (e) => e.target.select()));
 
@@ -91,8 +110,8 @@ function startApp() {
     const s = { id: Date.now(), t: new Date().toISOString() };
     for (const f of FIELDS) {
       const raw = $(f).value.trim();
-      if (!/^\d{1,3}$/.test(raw)) { // 0 is valid; blanks, negatives and decimals are not
-        $('err').textContent = 'Use whole numbers from 0 to 999.';
+      if (!/^\d+$/.test(raw) || Number(raw) > MAX) { // 0 is valid; blanks, negatives and decimals are not
+        $('err').textContent = `Use whole numbers from 0 to ${MAX}.`;
         $(f).focus();
         return;
       }

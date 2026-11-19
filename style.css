@@ -139,6 +139,11 @@ button { font: inherit; color: inherit; border: 0; background: none; cursor: poi
 .facts div { background: var(--surface); padding: 14px 12px; display: flex; flex-direction: column; justify-content: space-between; container-type: inline-size; min-width: 0; }
 .facts span { display: block; font-size: 11px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
 .facts b { display: block; margin-top: 6px; font-size: min(21px, calc(165cqi / var(--len, 6))); font-weight: 750; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.facts em { display: block; margin-top: 2px; font-style: normal; font-size: 12px; font-weight: 500; color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.facts [data-lead="m"] b { color: #ff5c93; }  /* lighter garnet, readable on dark */
+.facts [data-lead="z"] b { color: var(--madrid); }
+.facts [data-lead="m"] em { color: var(--text); }
+.facts [data-lead="z"] em { color: var(--text); }
 .lead { margin: 16px 2px 0; font-size: 15px; color: var(--muted); }
 .lead b { color: var(--text); font-weight: 600; }
 
@@ -246,3 +251,24 @@ legend { font-size: 12px; font-weight: 700; letter-spacing: .14em; text-transfor
 .log-list ul li::before { content: ""; position: absolute; left: 2px; top: .62em; width: 5px; height: 5px; border-radius: 50%; background: var(--line); }
 .log-list > li:first-child ul li { color: var(--text); }
 .app-ver { margin-top: 28px; text-align: center; font-size: 12px; color: var(--muted); opacity: .7; font-variant-numeric: tabular-nums; }
+
+/* ---------- Barça-win celebration ---------- */
+.party { position: fixed; inset: 0; width: 100%; height: 100%; pointer-events: none; z-index: 50; }
+.party-msg {
+  position: fixed; left: 50%; top: 40%; z-index: 49; pointer-events: none; /* under the confetti */
+  transform: translate(-50%, -50%); text-align: center; white-space: nowrap;
+  padding: 22px 34px 20px; border-radius: 24px;
+  background: rgba(11, 13, 18, .94); border: 1px solid rgba(237, 187, 0, .45);
+  box-shadow: 0 20px 60px rgba(0, 0, 0, .5), 0 0 0 6px rgba(165, 0, 68, .25);
+  animation: party-pop 3.4s cubic-bezier(.2,.8,.2,1) forwards;
+}
+.party-msg small { display: block; font-size: 12px; font-weight: 700; letter-spacing: .2em; text-transform: uppercase; color: var(--gold); }
+.party-msg b { display: block; margin-top: 6px; font-size: 44px; font-weight: 800; letter-spacing: -.03em; color: #fff; text-shadow: 0 4px 24px rgba(165,0,68,.8); }
+.party-msg span { display: block; margin-top: 4px; font-size: 22px; font-weight: 700; color: var(--madrid); font-variant-numeric: tabular-nums; }
+@keyframes party-pop {
+  0% { opacity: 0; transform: translate(-50%, -50%) scale(.6); }
+  12% { opacity: 1; transform: translate(-50%, -50%) scale(1.08); }
+  20% { transform: translate(-50%, -50%) scale(1); }
+  80% { opacity: 1; }
+  100% { opacity: 0; transform: translate(-50%, -56%) scale(1); }
+}

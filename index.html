@@ -112,6 +112,24 @@
   </form>
 </dialog>
 
+<dialog id="del" class="sheet">
+  <form id="delForm">
+    <header class="sheet-h">
+      <h2>Delete session?</h2>
+      <p id="delDate"></p>
+    </header>
+    <div class="del-card">
+      <div><span>Games won</span><b id="delGames"></b></div>
+      <div><span>Goals</span><b id="delGoals"></b></div>
+    </div>
+    <p class="del-note">It will be removed from every total. This can't be undone.</p>
+    <div class="actions">
+      <button type="button" id="delCancel" class="ghost">Keep</button>
+      <button type="submit" class="danger">Delete session</button>
+    </div>
+  </form>
+</dialog>
+
 <script src="app.js"></script>
 </body>
 </html>

@@ -104,15 +104,27 @@ function startApp() {
     render();
   });
 
+  let doomed = null; // the session the delete sheet is showing
   $('list').addEventListener('click', (e) => {
-    const row = e.target.closest('[data-id]');
-    if (!row) return;
-    const s = sessions.find((x) => x.id === Number(row.dataset.id));
-    if (s && confirm(`Delete the ${ymd(new Date(s.t))} session (${s.mw}–${s.zw})?`)) {
-      sessions = sessions.filter((x) => x !== s);
-      save();
-      render();
-    }
+    const b = e.target.closest('.del');
+    doomed = b && sessions.find((x) => x.id === Number(b.dataset.id));
+    if (!doomed) return;
+    const d = new Date(doomed.t);
+    $('delDate').textContent = `${ymd(d)} · ${timeFmt.format(d)}`;
+    $('delGames').textContent = `${doomed.mw} – ${doomed.zw}`;
+    $('delGoals').textContent = `${doomed.mg} – ${doomed.zg}`;
+    $('del').showModal();
+  });
+  $('delCancel').onclick = () => $('del').close();
+  $('delForm').addEventListener('submit', (e) => {
+    e.preventDefault();
+    if (!doomed) return;
+    const before = sessions;
+    sessions = sessions.filter((x) => x.id !== doomed.id);
+    if (!save()) { sessions = before; return; } // keep screen and storage in sync
+    doomed = null;
+    $('del').close();
+    render();
   });
 
   $('exportBtn').onclick = exportPng;
@@ -132,11 +144,14 @@ function render() {
     const d = new Date(s.t);
     const w = s.mw > s.zw ? 'm' : s.zw > s.mw ? 'z' : '';
     const who = w === 'm' ? 'Mabast won' : w === 'z' ? 'Zmnako won' : 'Drawn session';
-    return `<li><button class="row ${w}" data-id="${s.id}" aria-label="${who} ${s.mw} to ${s.zw}. Tap to delete.">
+    return `<li class="row ${w}">
       <span class="when"><b>${ymd(d)}</b><small>${timeFmt.format(d)}</small></span>
       <span class="score">${s.mw}<i>–</i>${s.zw}<small>${who}</small></span>
       <span class="goals"><small>Goals</small>${s.mg}–${s.zg}</span>
-    </button></li>`;
+      <button class="del" type="button" data-id="${s.id}" aria-label="Delete ${ymd(d)} session, ${s.mw} to ${s.zw}">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M10 11v6m4-6v6M6 7l1 12a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1l1-12M9 7V5a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+    </li>`;
   }).join('');
 }
 
